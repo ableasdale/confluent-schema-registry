@@ -6,6 +6,8 @@
   "fields": [
     {"name": "item", "type":"string"},
     {"name": "total_cost", "type": "double" },
-    {"name": "customer_id", "type": "string"}
+    {"name": "customer_id", "type": "string"},
+    // Simple EVOLUTION: Add this field
+    {"name": "additional_info", "type": "string", "default": "" }
   ]
 }

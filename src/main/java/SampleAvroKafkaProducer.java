@@ -20,7 +20,7 @@ public class SampleAvroKafkaProducer {
         Producer<String, String> producer = new KafkaProducer<>(props);
 
         // Create our Avro instance
-        Purchase p = new Purchase("x",1.23,"23");
+        Purchase p = new Purchase("x",1.23,"23", "the new field");
 
         producer.send(new ProducerRecord("avro-test-topic", p),
                 (event, ex) -> {

@@ -7,7 +7,7 @@ import java.lang.invoke.MethodHandles;
 public class Test {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     public static void main(String[] args) {
-        Purchase p = new Purchase("x",1.23,"23");
+        Purchase p = new Purchase("x",1.23,"23", "test");
         LOG.info("Schema: "+p.getSchema());
     }
 }
