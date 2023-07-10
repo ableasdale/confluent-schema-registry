@@ -19,5 +19,19 @@ get /controller
 {"version":2,"brokerid":1,"timestamp":"1689018188126","kraftControllerEpoch":-1}
 ```
 
+ReST Proxy
 
+```bash
+curl -s -XGET localhost:8082/v3/clusters | jq
+```
 
+```bash
+curl -s -XGET localhost:8082/topics | jq
+
+```
+
+Schema Registry
+
+```bash
+curl -s -XGET http://localhost:8081/schemas/types | jq
+```
