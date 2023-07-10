@@ -1,4 +1,4 @@
-# confluent-schema-registry
+# Confluent Schema Registry
 
 Start up the components:
 
@@ -6,7 +6,9 @@ Start up the components:
 docker-compose up -d
 ```
 
-Sanity test Zookeeper:
+## Component Check
+
+### Zookeeper
 
 Let's check the Zookeeper Shell on the Zookeeper host:
 
@@ -19,7 +21,7 @@ get /controller
 {"version":2,"brokerid":1,"timestamp":"1689018188126","kraftControllerEpoch":-1}
 ```
 
-ReST Proxy
+### ReST Proxy
 
 ```bash
 curl -s -XGET localhost:8082/v3/clusters | jq
@@ -30,7 +32,7 @@ curl -s -XGET localhost:8082/topics | jq
 
 ```
 
-Schema Registry
+### Schema Registry
 
 ```bash
 curl -s -XGET http://localhost:8081/schemas/types | jq

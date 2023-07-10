@@ -82,3 +82,27 @@ services:
       KAFKA_REST_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_REST_LISTENERS: "http://rest-proxy:8082"
       KAFKA_HEAP_OPTS: "-Xmx1G -Xms1G"
+
+  control-center:
+    image: confluentinc/cp-enterprise-control-center:${CP_TAG}
+    hostname: control-center
+    container_name: control-center
+    restart: always
+    depends_on:
+      - zookeeper
+      - broker
+      - schema-registry
+    ports:
+      - "9021:9021"
+    environment:
+      CONTROL_CENTER_LOG4J_ROOT_LOGLEVEL: INFO
+      CONTROL_CENTER_LOG4J_LOGLEVEL: INFO
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: broker:9092
+      CONTROL_CENTER_ZOOKEEPER_CONNECT: zookeeper:2181
+      CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
+      CONTROL_CENTER_REPLICATION_FACTOR: 1
+      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
+      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
+      CONFLUENT_METRICS_TOPIC_REPLICATION: 1
+      CONTROL_CENTER_REST_LISTENERS: "http://0.0.0.0:9021"
+      PORT: 9021
