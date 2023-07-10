@@ -19,14 +19,19 @@ services:
     container_name: broker
     restart: always
     ports:
-      - "9091:9091"
+      #- "9091:9091"
+      - "29091:29091"
+      - "10099:10099"
     depends_on:
       - zookeeper
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      KAFKA_LISTENERS: PLAINTEXT://:9091
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9091
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9091,PLAINTEXT_HOST://localhost:29091
+
+      #KAFKA_LISTENERS: PLAINTEXT://:9091
+      #KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9091
       # Metric Reporter (and TLS Configuration)
       KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
       KAFKA_CONFLUENT_METRICS_ENABLE: 'false'
@@ -43,6 +48,8 @@ services:
       KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_CONFLUENT_REPORTERS_TELEMETRY_AUTO_ENABLE: 'false'
       KAFKA_CONFLUENT_BALANCER_ENABLE: 'false'
+      KAFKA_JMX_PORT: 10099
+      KAFKA_JMX_HOSTNAME: 0.0.0.0
       
   schema-registry:
     image: confluentinc/cp-schema-registry:${CP_TAG}
