@@ -1,0 +1,83 @@
+version: "3.8"
+services:
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:${CP_TAG}
+    hostname: zookeeper
+    container_name: zookeeper
+    restart: always
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_LOG4J_ROOT_LOGLEVEL: ERROR
+      ZOOKEEPER_LOG4J_LOGLEVEL: ERROR
+
+  broker:
+    image: confluentinc/cp-server:${CP_TAG}
+    hostname: broker
+    container_name: broker
+    restart: always
+    ports:
+      - "9091:9091"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENERS: PLAINTEXT://:9091
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9091
+      # Metric Reporter (and TLS Configuration)
+      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+      KAFKA_CONFLUENT_METRICS_ENABLE: 'false'
+      # Replication Factors for Standalone Kafka Broker
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 1
+      CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
+      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+      CONFLUENT_CONTROL_CENTER_INTERNAL_TOPICS_REPLICATION: 1
+      CONFLUENT_CONTROL_CENTER_COMMAND_TOPIC_REPLICATION: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_REPORTERS_TELEMETRY_AUTO_ENABLE: 'false'
+      KAFKA_CONFLUENT_BALANCER_ENABLE: 'false'
+      
+  schema-registry:
+    image: confluentinc/cp-schema-registry:${CP_TAG}
+    hostname: schema-registry
+    container_name: schema-registry
+    restart: always
+    ports:
+      - '8081:8081'
+    depends_on:
+      - zookeeper
+      - broker
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: broker:9091
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_LISTENERS: "http://schema-registry:8081"
+      SCHEMA_REGISTRY_SCHEMA_REGISTRY_INTER_INSTANCE_PROTOCOL: "https"
+      SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: INFO
+      SCHEMA_REGISTRY_LOG4J_LOGLEVEL: ERROR
+
+
+  rest-proxy:
+    image: confluentinc/cp-kafka-rest:${CP_TAG}
+    hostname: rest-proxy
+    container_name: rest-proxy
+    restart: always
+    depends_on:
+      - zookeeper
+      - broker
+      - schema-registry
+    ports:
+      - 8082:8082
+    environment:
+      KAFKA_REST_LOG4J_ROOT_LOGLEVEL: ERROR
+      KAFKA_REST_LOG4J_LOGLEVEL: ERROR
+      KAFKA_REST_HOST_NAME: rest-proxy
+      KAFKA_REST_BOOTSTRAP_SERVERS: broker:9091
+      KAFKA_REST_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_REST_LISTENERS: "http://rest-proxy:8082"
+      KAFKA_HEAP_OPTS: "-Xmx1G -Xms1G"
