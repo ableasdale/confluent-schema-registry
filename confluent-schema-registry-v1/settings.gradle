@@ -5,4 +5,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'confluent-schema-registry'
+rootProject.name = 'confluent-schema-registry-v1'

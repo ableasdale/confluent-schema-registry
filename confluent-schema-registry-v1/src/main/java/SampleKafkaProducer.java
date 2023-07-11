@@ -18,7 +18,6 @@ public class SampleKafkaProducer {
 
         Producer<String, String> producer = new KafkaProducer<>(props);
 
-
         producer.send(new ProducerRecord<>("test", "test"),
                 (event, ex) -> {
                     if (ex != null)

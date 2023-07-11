@@ -20,18 +20,24 @@ public class SampleAvroKafkaProducer {
         Producer<String, String> producer = new KafkaProducer<>(props);
 
         // Create our Avro instance
-        Purchase p = new Purchase("x",1.23,"23", "the new field");
+        Purchase p = new Purchase("x",1.23,"23");
+        //PurchaseV2 p2 = new PurchaseV2("x",1.23,"23", "the new field");
 
-        producer.send(new ProducerRecord("avro-test-topic", p),
+        produceTo(producer, "avro-test-topic", p);
+        //produceTo(producer, "avro-test-topic", p2);
+        producer.flush();
+        LOG.info(String.format("An event was produced to topic"));
+        producer.close();
+
+    }
+
+    private static void produceTo(Producer<String, String> producer, String topic, Object o) {
+        producer.send(new ProducerRecord(topic, o),
                 (event, ex) -> {
                     if (ex != null)
                         LOG.error("Exception:",ex);
                     else
                         LOG.info(String.format("Produced event to topic %s: key = %-10s value = %s", "x", "y", "z"));
                 });
-        producer.flush();
-        LOG.info(String.format("An event was produced to topic"));
-        producer.close();
-
     }
 }
