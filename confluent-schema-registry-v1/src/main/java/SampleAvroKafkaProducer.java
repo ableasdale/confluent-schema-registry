@@ -10,6 +10,7 @@ import java.util.Properties;
 
 public class SampleAvroKafkaProducer {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     public static void main(String[] args) {
 
         final Properties props = new Properties();
@@ -19,9 +20,9 @@ public class SampleAvroKafkaProducer {
         props.put("value.serializer", io.confluent.kafka.serializers.KafkaAvroSerializer.class);
         Producer<String, String> producer = new KafkaProducer<>(props);
 
-        // Create our Avro instance
-        Purchase p = new Purchase("x",1.23,"23");
-        produceTo(producer, "avro-new-test-topic", p);
+        // Create our V1 Avro instance
+        Purchase p = new Purchase("x", 1.23, "23");
+        produceTo(producer, "avro-application-test-topic", p);
         producer.flush();
         LOG.info(String.format("An event was produced to topic"));
         producer.close();
@@ -32,7 +33,7 @@ public class SampleAvroKafkaProducer {
         producer.send(new ProducerRecord(topic, o),
                 (event, ex) -> {
                     if (ex != null)
-                        LOG.error("Exception:",ex);
+                        LOG.error("Exception:", ex);
                     else
                         LOG.info(String.format("Produced event to topic %s: key = %-10s value = %s", "x", "y", "z"));
                 });

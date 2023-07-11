@@ -37,3 +37,27 @@ curl -s -XGET localhost:8082/topics | jq
 ```bash
 curl -s -XGET http://localhost:8081/schemas/types | jq
 ```
+
+## Test the Application
+
+Let's run V1 of our application:
+
+```bash
+cd confluent-schema-registry-v1
+./gradlew clean
+./gradlew generateAvroJava
+./gradlew run    
+```
+
+Now let's run V2 of our application:
+
+```bash
+cd confluent-schema-registry-v2
+./gradlew clean
+./gradlew generateAvroJava
+./gradlew run
+```
+
+If we're viewing the topic in C3 (http://localhost:9021/), we should see both versions of the message in our `avro-application-test-topic`:
+
+![Topic Data](img/messages.png)

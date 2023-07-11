@@ -21,7 +21,7 @@ public class SampleAvroKafkaProducer {
 
         // Create our Avro instance
         Purchase p = new Purchase("x",1.23,"23", "the new field");
-        produceTo(producer, "avro-new-test-topic", p);
+        produceTo(producer, "avro-application-test-topic", p);
         producer.flush();
         LOG.info(String.format("An event was produced to topic"));
         producer.close();
