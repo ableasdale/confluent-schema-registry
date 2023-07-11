@@ -52,7 +52,7 @@ cd confluent-schema-registry-v1
 Now let's run V2 of our application:
 
 ```bash
-cd confluent-schema-registry-v2
+cd ../confluent-schema-registry-v2
 ./gradlew clean
 ./gradlew generateAvroJava
 ./gradlew run
@@ -61,3 +61,7 @@ cd confluent-schema-registry-v2
 If we're viewing the topic in C3 (http://localhost:9021/), we should see both versions of the message in our `avro-application-test-topic`:
 
 ![Topic Data](img/messages.png)
+
+And if you go to the Schema tab, you should see the two versions of the Schema:
+
+![Avro Schemas](img/avro-schemas.png)
